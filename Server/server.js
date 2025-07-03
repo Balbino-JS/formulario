@@ -41,23 +41,7 @@ app.get('/usuarios', async (req, res) => {
 
 // auteraça~de usuários
 
-app.put('/usuarios/:id', async (req, res) => {
-    try {
-        const user = await prisma.user.update({
-            where:{
-                id: req.params.id
-            },
-            data: {
-                name: req.body.name,
-                testimony: req.body.testimony
-            }
-        })
 
-        res.status(201).json(user);
-    } catch (error) {
-        res.status(500).json({ error: 'Erro ao salvar usuário.', detalhes: error.message });
-    }
-})
 
 app.delete('/usuarios/:id', async (req, res) => {
     try {
@@ -79,15 +63,3 @@ app.listen(3000)
 
 
 
-/*
-1) Tipo de rota / Método HTTP
-2) Endereço
-
-Criar a API de Usuários
-
-- Criar um usuário
-- Listar tosdos os usuários
-- Editar um usuário
--Deletar um usuário
-
-*/
