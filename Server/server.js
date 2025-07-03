@@ -1,19 +1,41 @@
-import express from "express"
+import express from 'express';
+import pkg from './generated/prisma/index.js'; // caminho correto para o Prisma Client gerado
+import { ObjectId } from 'bson';
 
+const { PrismaClient } = pkg;
 
-const app = express ()
+const prisma = new PrismaClient();
 
-const users = []
+const app = express();
+app.use(express.json());
 
-app.post('/usuarios', (req, res) => {
+// auteraça~de usuários
 
-    users.push(req.body)
+app.put('/usuarios/:id', async (req, res) => {
+    try {
+        const user = await prisma.user.update({
+            where:{
+                id: req.params.id
+            },
+            data: {
+                name: req.body.name,
+                testimony: req.body.testimony
+            }
+        })
 
-    res.send('Ok post')
+        res.status(201).json(user);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao salvar usuário.', detalhes: error.message });
+    }
 })
 
-app.get('/usuarios', (req, res) =>{
-    res.json(users)
+app.get('/usuarios', async (req, res) => {
+    try {
+        const users = await prisma.user.findMany();
+        res.status(200).json(users)
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar usuários.', detalhes: error.message })
+    }
 })
 
 
